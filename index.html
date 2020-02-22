@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <link rel="stylesheet" href="assets/styles/style.css">
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="assets/scripts/anime.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="container-fluid">
+            <div class="container-fluid">
+                <div class="hero is-bold is-danger is-centered">
+                    
+                    <h1 id="title-bar" class="is-size-1 has-text-centered">
+                        Generator Servant
+                    </h1>
+                    
+                    <br>
+                    
+                    <div id="generate-bar" class="has-text-centered">
+                        <button id="generate-btn" class="button is-round is-large">
+                            <img src="assets/images/T.svg" alt="1 Colorless Mana" width=25></button>
+                    </div>
+                    
+                    <div id="color-bar" class="tile">
+                        <button class="tile button color">
+                            Red
+                            <img src="assets/images/R.svg" alt="" width=25>  
+                        </button>
+                        <button class="tile button color">
+                            Blue
+                            <img src="assets/images/U.svg" alt="" width=25>
+                        </button>
+                        <button class="tile button color">
+                            Green
+                            <img src="assets/images/G.svg" alt="" width=25>
+                        </button>
+                        <button class="tile button color">
+                            Black
+                            <img src="assets/images/B.svg" alt="" width=25>
+                        </button>
+                        <button class="tile button color">
+                            White
+                            <img src="assets/images/W.svg" alt="" width=25>
+                        </button>
+                        <button class="tile button color">
+                            Colorless                    
+                            <img src="assets/images/1.svg" alt="" width=25>
+                        </button>
+                    </div>
+
+                    <div id="finish-bar" class="has-text-centered">
+                        <button id=finish-btn class="button is-round is-large">
+                            Generate
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div id="library" class="tile is-ancestor">
+            
+        </div>
+    </div>
+    <script>
+        var translateDistance = 50
+        var baseQueryURL = "https://api.scryfall.com/cards/random?q=color%3D"
+
+        // Gets a random number of cards from Scryfall and appends them to the libray
+        function getAndPostCard() {
+
+            queryURL = baseQueryURL + checkColor(); 
+            console.log(queryURL)
+            for (i = 0; i < 1; i++) {
+                $.ajax({
+                url: queryURL,
+                method: "GET"
+                }).then(function(response) {
+                    
+                    var newCard = ($("<div>").addClass("tile mtgCard is-medium"))
+                    newCard.append($("<img>").attr("src", response.image_uris.small))
+                    $("#library").append(newCard)
+                    
+                })
+            }
+        }
+        
+        // Finds which color button was clicked
+        // Only works for monocolor queries currently
+        function checkColor() {
+            return $(".is-active").text().trim();
+        }
+
+        // Pulls the color bar below making it visible
+        $("#generate-btn").on("click", function() {
+            anime({
+                targets: "#color-bar",
+                translateY: translateDistance
+            })
+            anime({
+                targets: "#library",
+                translateY: translateDistance
+            })
+
+            $("#color-bar").css("z-index", 0)
+        })
+
+        // Gives user feedback when pressing color buttons
+        // Also brings up finish button
+        $(".color").on("click", function() {
+            if ($(this).hasClass("is-active")) {
+                $(this).removeClass("is-active")
+            }
+            else {
+                $(this).addClass("is-active")
+            }
+
+            anime({
+                targets: "#finish-bar",
+                translateY: 2 * translateDistance
+            })
+            anime({
+                targets: "#library",
+                translateY: 2 * translateDistance
+            })
+
+            $("#finish-bar").css("z-index", 0)
+        })
+
+        $("#finish-btn").on("click", function() {
+            getAndPostCard(); 
+        })
+
+        
+    </script>
+
+</body>
+</html>

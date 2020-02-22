@@ -1,0 +1,15 @@
+#generate-bar {
+    z-index: 0;
+}
+
+#color-bar {
+    z-index: -1;
+}
+
+#finish-bar {
+    z-index: -2;
+}
+
+.mtgCard {
+    flex-wrap: wrap;
+}
