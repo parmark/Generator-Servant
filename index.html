@@ -20,7 +20,7 @@
     <div class="container">
         <div class="container-fluid">
             <div class="container-fluid">
-                <div class="hero is-bold is-danger is-centered">
+                <div class="is-centered">
                     
                     <h1 id="title-bar" class="is-size-1 has-text-centered">
                         Generator Servant
@@ -28,7 +28,7 @@
                     
                     <br>
                     
-                    <div id="generate-bar" class="has-text-centered">
+                    <div id="generate-bar" class="hero has-text-centered">
                         <button id="generate-btn" class="button is-round is-large">
                             <img src="assets/images/T.svg" alt="1 Colorless Mana" width=25></button>
                     </div>
@@ -85,15 +85,16 @@
 
             queryURL = baseQueryURL + checkColor(); 
             console.log(queryURL)
-            for (i = 0; i < 1; i++) {
+            for (i = 0; i < 5; i++) {
                 $.ajax({
                 url: queryURL,
                 method: "GET"
                 }).then(function(response) {
                     
-                    var newCard = ($("<div>").addClass("tile mtgCard is-medium"))
+                    var newCard = ($("<div>").addClass("mtgCard"))
                     newCard.append($("<img>").attr("src", response.image_uris.small))
                     $("#library").append(newCard)
+                    spinCard(newCard);
                     
                 })
             }
@@ -103,6 +104,13 @@
         // Only works for monocolor queries currently
         function checkColor() {
             return $(".is-active").text().trim();
+        }
+
+        function spinCard(card) {
+            anime({
+                targets: ".mtgCard",
+                rotate: "1turn"
+            })
         }
 
         // Pulls the color bar below making it visible
